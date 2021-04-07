@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import Product from './models/product';
+import { HttpClient } from "@angular/common/http"
 
 @Component({
   selector: 'app-root',
@@ -8,20 +9,18 @@ import Product from './models/product';
 })
 export class AppComponent {
   title = 'angular-course';
-  public listShoes: Product[] = [];
+  api = 'http://localhost:8080'
 
-  constructor() {
-    this.listShoes.push(
-      new Product('Nike', 'Air Jordan 9'),
-      new Product('Nike', 'Air Force'),
-      new Product("Adidas", "Yeezy")
-    )
-    setTimeout(() => {
-      this.listShoes.push(new Product('Converse', '2'));
-    }, 400);
+  public listShoes: Product[] = []
 
-    setInterval(() => {
-      this.listShoes.push(new Product('Converse', '2'));
-    }, 6000)
+  constructor(private http: HttpClient) {}
+
+  async initProduct() {
+    try {
+      const res = await this.http.get(`${this.api}/products`).toPromise()
+      console.log(res)
+    } catch (e) {
+      console.error("Error", e)
+    }
   }
 }
